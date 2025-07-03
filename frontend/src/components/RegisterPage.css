@@ -55,3 +55,20 @@
 .auth-link {
   float: right;
 }
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  top: 15%;
+  right: 10px; 
+  /* transform: translateY(-75%); */
+  cursor: pointer;
+  color: #333; 
+}

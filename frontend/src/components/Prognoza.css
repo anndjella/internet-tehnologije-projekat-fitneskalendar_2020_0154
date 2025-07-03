@@ -12,12 +12,12 @@
   flex-direction: row;
   justify-content: stretch; 
 }
-.kontejner{
+/* .kontejner{
   display: flex;
   flex-direction: row;
   justify-content: flex-start; 
   align-items: center;
-}
+} */
 .weather-forecast form {
   margin-bottom: 20px;
 }
@@ -30,7 +30,7 @@
 
 .weather-forecast button {
   padding: 5px 10px;
-  margin: 10px;
+  margin: 6px;
   width: 120px;
  
 }

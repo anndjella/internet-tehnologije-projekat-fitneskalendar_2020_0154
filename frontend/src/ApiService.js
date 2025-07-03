@@ -1,34 +1,39 @@
 import axios from "axios";
 
 class Api {
+
+  getToken() {
+    return window.localStorage.getItem("authToken");
+  }
   
   login(email,password){
     return axios.post('http://127.0.0.1:8000/api/login', { email, password }, { withCredentials: true });
+
   }
   googleLogout() {
     return axios.get("http://127.0.0.1:8000/google/logout");
   }
-  logout(authToken){
+  logout(){
    return axios.post('http://127.0.0.1:8000/api/logout', null, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${this.getToken()}`,
       },
     });
   }
   registracija(formData){
     return axios.post('http://127.0.0.1:8000/api/register', formData);
   }
-  vratiTipoveDogadjaja(authToken){
+  vratiTipoveDogadjaja(){
     return axios.get('http://127.0.0.1:8000/api/tipoviDogadjaja', {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${this.getToken()}`,
       },
     });
   }
-  napraviDogadjaj(authToken,eventData){
+  napraviDogadjaj(eventData){
     return axios.post('http://127.0.0.1:8000/api/dogadjaji', eventData, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${this.getToken()}`,
       },
     });
   }
@@ -37,54 +42,54 @@ class Api {
       params: eventData 
     }); 
   }
-  napraviTipDogadjaja(newEventType,authToken){
+  napraviTipDogadjaja(newEventType){
    return axios.post(
       "http://127.0.0.1:8000/api/tipoviDogadjaja",
       newEventType,
       {
         headers: {
-          Authorization: `Bearer ${authToken}`,
+          Authorization: `Bearer ${this.getToken()}`,
         },
       }
     );
   }
-  izbrisiTipDogadjaja(id,authToken){
+  izbrisiTipDogadjaja(id){
     return axios.delete(`http://127.0.0.1:8000/api/tipoviDogadjaja/${id}`, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${this.getToken()}`,
       },
     });
   }
-  vratiDogadjaj(idDogadjaja,authToken){
+  vratiDogadjaj(idDogadjaja){
     return axios.get(`http://127.0.0.1:8000/api/dogadjaji/${idDogadjaja}`,
       {
           headers: {
-            Authorization: `Bearer ${authToken}`,
+            Authorization: `Bearer ${this.getToken()}`,
           },
         }
   );
   }
-  izmeniDogadjaj(id,event,authToken){
+  izmeniDogadjaj(id,event){
    return axios.put(`http://127.0.0.1:8000/api/dogadjaji/${id}`, event, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${this.getToken()}`,
       },
     });
   }
-  vratiKonkretniTipDogadjaja(id,authToken){
+  vratiKonkretniTipDogadjaja(id){
     return axios.get(
       `http://127.0.0.1:8000/api/dogadjaji/poTipu/${id}`,
       {
         headers: {
-          Authorization: `Bearer ${authToken}`,
+          Authorization: `Bearer ${this.getToken()}`,
         },
       }
     );
   }
-  vratiKorisnika(authToken){
+  vratiKorisnika(){
     return  axios.get("http://127.0.0.1:8000/api/user", {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${this.getToken()}`,
       },
     })
   }
@@ -93,51 +98,51 @@ class Api {
       "http://127.0.0.1:8000/api/dogadjaji/javni"
     );
   }
-  izbrisiDogadjaj(id,authToken){
+  izbrisiDogadjaj(id){
     return axios.delete(
       `http://127.0.0.1:8000/api/dogadjaji/${id}`,
       {
         headers: {
-          Authorization: `Bearer ${authToken}`,
+          Authorization: `Bearer ${this.getToken()}`,
         },
       }
     );
   }
-  vratiDogadjaje(authToken){
+  vratiDogadjaje(){
     return axios.get("http://127.0.0.1:8000/api/dogadjaji", {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${this.getToken()}`,
       },
     });
   }
-  vratiKorisnike(authToken){
+  vratiKorisnike(){
     return axios.get("http://127.0.0.1:8000/api/users", {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${this.getToken()}`,
       },
     });
   }
-  izbrisiKorisnika(id,authToken){
+  izbrisiKorisnika(id){
     return axios.delete(
       `http://127.0.0.1:8000/api/users/${id}`,
       {
         headers: {
-          Authorization: `Bearer ${authToken}`,
+          Authorization: `Bearer ${this.getToken()}`,
         },
       }
     );
   }
-  izmeniKorisnika(id, updatedData,authToken){
+  izmeniKorisnika(id, updatedData){
     return axios.put(`http://127.0.0.1:8000/api/users/${id}`, updatedData, {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${this.getToken()}`,
       },
     });
   }
-  korisnikoviDogadjaji(authToken){
+  korisnikoviDogadjaji(){
    return axios.get("http://127.0.0.1:8000/api/korisnikoviDogadjaji", {
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${this.getToken()}`,
       },
     });
   }

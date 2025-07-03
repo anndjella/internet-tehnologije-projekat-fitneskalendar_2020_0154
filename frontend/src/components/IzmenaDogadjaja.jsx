@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import axios from "axios";
 import Select from "react-select";
 import "./EventForm.css";
-import { toast } from "react-toastify";
+import { prikaziToast } from "./toast";
 import "react-toastify/dist/ReactToastify.css";
-import api from "../Api";
+import api from "../ApiService";
 
 const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
   const [title, setTitle] = useState(initialValues.title);
@@ -35,7 +34,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
           return;
         }
 
-        const response = await api.vratiTipoveDogadjaja(authToken);
+        const response = await api.vratiTipoveDogadjaja();
         setEventTypes(response.data.data);
         // console.log(response.data.data);
       } catch (error) {
@@ -49,8 +48,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const authToken = localStorage.getItem("authToken");
-        const response = await api.vratiDogadjaj(idDogadjaja, authToken);
+        const response = await api.vratiDogadjaj(idDogadjaja);
         //console.log("vracen dogadjaj: "+JSON.stringify(response))
         const reminders = getReminderOptionsForNotifications(
           start,
@@ -89,46 +87,23 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
             ),
           })),
     };
-    const authToken = localStorage.getItem("authToken");
     try {
       const response = await api.izmeniDogadjaj(
         initialValues.id,
-        updatedEvent,
-        authToken
+        updatedEvent
       );
       // onUpdate(response.data);
       onUpdate(response.data);
-      toast.success("Događaj je uspešno izmenjen!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      prikaziToast("Sistem je izmenio događaj.",true);
     } catch (error) {
       console.error("Error updating event:", error);
+      if(error.response="Podaci nisu validni: The notifikacije.0.vremeSlanja must be a date after or equal to now."){
+        prikaziToast("Ne možete uneti podsetnike za događaj koji je već prošao",false);
+      }else
       if (error.response && error.response.status === 422) {
-        toast.error("Greška: Loše uneti podaci! Molimo proverite unos.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        prikaziToast("Greška: Loše uneti podaci! Molimo proverite unos.",false);
       } else {
-        toast.error("Greška prilikom izmene događaja!", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        prikaziToast("Sistem ne može da izmeni događaj.",false);
       }
     }
   };
@@ -350,7 +325,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
         <input type="text" value={idTipa} onChange={(e) => setIdTipa(e.target.value)} />
       </div> */}
 
-      <button type="submit" className="btn btn-primary">
+      <button type="submit" className="btn btn-primary-izmeni">
         Izmeni
       </button>
     </form>

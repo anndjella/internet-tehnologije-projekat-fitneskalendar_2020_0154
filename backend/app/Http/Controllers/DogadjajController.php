@@ -161,48 +161,58 @@ class DogadjajController extends Controller
             //     }
             // });
             DB::transaction(function () use ($request, $validated, $dogadjaj) {
+                $dragAndDrop = $request->input('dragAndDrop', false);
                 $originalDatumVremeOd = Carbon::parse($dogadjaj->datumVremeOd);
-            
-                // Ažuriraj događaj
                 $dogadjaj->update($validated);
-            
-                // Dobavi notifikacije iz requesta
-                $notifikacijeIzRequesta = $request->has('notifikacije') ? $request->input('notifikacije') : [];
-            
-                // Kreiraj niz poruka iz requesta za lakše pretrage
-                $porukeIzRequesta = array_column($notifikacijeIzRequesta, 'poruka');
-            
-                // Ažuriraj ili izbriši postojeće notifikacije
-                foreach ($dogadjaj->notifikacije as $notifikacija) {
-                    if (in_array($notifikacija->poruka, $porukeIzRequesta)) {
-                        // Ako je notifikacija prisutna u requestu, ažuriraj njeno vreme slanja
-                        $originalnoVremeSlanja = Carbon::parse($notifikacija->vremeSlanja);
-                        $razlikaUminutima = $originalDatumVremeOd->diffInMinutes($originalnoVremeSlanja);
-                        $noviDatumVremeOd = Carbon::parse($dogadjaj->datumVremeOd);
-                        $novoVremeSlanja = $noviDatumVremeOd->copy()->subMinutes($razlikaUminutima);
-            
+
+                if ($dragAndDrop) {
+                    //u slucaju da je dogadjaj izmenjen preko drag and drop-a
+
+                    $noviDatumVremeOd = Carbon::parse($request->input('datumVremeOd'));
+
+                    foreach ($dogadjaj->notifikacije as $notifikacija) {
+                        $originalVremeSlanja = Carbon::parse($notifikacija->vremeSlanja);
+                        $razlikaUminutima = $originalDatumVremeOd->diffInMinutes($originalVremeSlanja);
+
+                        $novoVremeSlanja =  $noviDatumVremeOd->copy()->subMinutes($razlikaUminutima);
+
                         $notifikacija->update(['vremeSlanja' => $novoVremeSlanja]);
-                    } else {
-                        // Ako notifikacija nije prisutna u requestu, obriši je
-                        $notifikacija->delete();
+                    }
+                } else {
+                    $notifikacijeIzRequesta = $request->has('notifikacije') ? $request->input('notifikacije') : [];
+                    $porukeIzRequesta = array_column($notifikacijeIzRequesta, 'poruka');
+
+                    foreach ($dogadjaj->notifikacije as $notifikacija) {
+                       
+                        //ako se promeni dogadjaj preko obicne izmene, ali se izmeni datum dogadjaja
+                        if (in_array($notifikacija->poruka, $porukeIzRequesta)) {
+                            $originalnoVremeSlanja = Carbon::parse($notifikacija->vremeSlanja);
+                            $razlikaUminutima = $originalDatumVremeOd->diffInMinutes($originalnoVremeSlanja);
+                            $noviDatumVremeOd = Carbon::parse($dogadjaj->datumVremeOd);
+
+                            $novoVremeSlanja = $noviDatumVremeOd->copy()->subMinutes($razlikaUminutima);
+
+                            $notifikacija->update(['vremeSlanja' => $novoVremeSlanja]);
+                        } else {
+                            //ako korisnik stavi manje notifikacija nego sto je pre bilo
+                            $notifikacija->delete();
+                        }
+                    }
+                    // ako korisnik stavi vise notifikacija nego sto je pre bilo
+                    foreach ($notifikacijeIzRequesta as $notifikacijaData) {
+                        if (!Notifikacija::where('idDogadjaja', $dogadjaj->id)
+                            ->where('poruka', $notifikacijaData['poruka'])
+                            ->exists()) {
+                            Notifikacija::create([
+                                'idDogadjaja' => $dogadjaj->id,
+                                'poruka' => $notifikacijaData['poruka'],
+                                'vremeSlanja' => $notifikacijaData['vremeSlanja'],
+                            ]);
+                        }
                     }
                 }
-            
-                // Dodaj nove notifikacije koje nisu prisutne u bazi
-                foreach ($notifikacijeIzRequesta as $notifikacijaData) {
-                    if (!Notifikacija::where('idDogadjaja', $dogadjaj->id)
-                                    ->where('poruka', $notifikacijaData['poruka'])
-                                    ->exists()) {
-                        Notifikacija::create([
-                            'idDogadjaja' => $dogadjaj->id,
-                            'poruka' => $notifikacijaData['poruka'],
-                            'vremeSlanja' => $notifikacijaData['vremeSlanja'],
-                        ]);
-                    }
-                }
+
             });
-            
-            
         } catch (\Exception $e) {
             return response()->json(['error' => 'Dogadjaj nije ažuriran. Greška: ' . $e->getMessage()], 500);
         }

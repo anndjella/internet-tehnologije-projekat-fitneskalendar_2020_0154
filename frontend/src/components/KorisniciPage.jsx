@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "./KorisniciPage.css";
 import Popup from "reactjs-popup";
-import { toast } from "react-toastify";
+import { prikaziToast } from "./toast";
 import "react-toastify/dist/ReactToastify.css";
-import api from "../Api";
+import api from "../ApiService";
 
 const Korisnici = () => {
   const [users, setUsers] = useState([]);
@@ -16,7 +15,6 @@ const Korisnici = () => {
     prezime: "",
     email: "",
   });
-  const token = localStorage.getItem("authToken");
 
   useEffect(() => {
     const cachedUsers = localStorage.getItem("users");
@@ -29,7 +27,7 @@ const Korisnici = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await api.vratiKorisnike(token);
+      const response = await api.vratiKorisnike();
       const usersData = response.data.data;
       setUsers(response.data.data);
       localStorage.setItem("users", JSON.stringify(usersData));
@@ -43,29 +41,13 @@ const Korisnici = () => {
     console.log("id kor:" + id);
 
     try {
-      const response = await api.izbrisiKorisnika(id,token);
+      const response = await api.izbrisiKorisnika(id);
       console.log(response);
-      toast.success("Korisnik je uspešno izbrisan!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      prikaziToast("Sistem je izmenio korisnika.",true);
       fetchUsers();
     } catch (error) {
       console.error("Greška prilikom brisanja korisnika:", error);
-      toast.error("Greška prilikom brisanja korisnika!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      prikaziToast("Sistem ne može da izmeni korisnika.",false);
     }
   };
 
@@ -81,29 +63,13 @@ const Korisnici = () => {
 
   const handleSave = async (id, updatedData) => {
     try {
-      await api.izmeniKorisnika(id,updatedData,token);
+      await api.izmeniKorisnika(id,updatedData);
       setEditingUser(null);
       fetchUsers();
-      toast.success("Korisnik je uspešno izmenjen!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      prikaziToast("Sistem je izmenio korisnika.",true);
     } catch (error) {
       console.error("Greška prilikom izmene korisnika:", error);
-      toast.error("Greška prilikom izmene korisnika!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      prikaziToast("Sistem ne može da izmeni korisnika.",false);
     }
   };
 
@@ -143,9 +109,9 @@ const Korisnici = () => {
         value={searchQuery}
         onChange={handleSearch}
       />
-      <label>
+      <label class="labela">
         <input type="checkbox" checked={sortByLastName} onChange={handleSort} />
-        Sortiraj po prezimenu
+          <span class="sort">Sortiraj po prezimenu</span> 
       </label>
       <ul>
         <li className="header">

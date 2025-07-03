@@ -2,13 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import 'moment-timezone';
-import axios from 'axios';
 import './EventForm.css';
 import Select from 'react-select';
 import { FaGoogle } from 'react-icons/fa'; 
-import { toast } from 'react-toastify';
+import { prikaziToast } from './toast';
 import 'react-toastify/dist/ReactToastify.css';
-import api from '../Api';
+import api from '../ApiService';
 
 const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
   const [eventName, setEventName] = useState('');
@@ -32,7 +31,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
           return;
         }
 
-        const response = await api.vratiTipoveDogadjaja(authToken);
+        const response = await api.vratiTipoveDogadjaja();
         setEventTypes(response.data.data);
         console.log(response.data.data);
       } catch (error) {
@@ -42,11 +41,9 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
 
     fetchEventTypes();
   }, []);
-
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const authToken = localStorage.getItem('authToken');
 
     const eventData = {
       idTipaDogadjaja: selectedEventType? selectedEventType : 7,
@@ -66,42 +63,18 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
   
     console.log('Podaci za slanje:', eventData);
     try {
-      const response = await api.napraviDogadjaj(authToken,eventData);
+      const response = await api.napraviDogadjaj(eventData);
       //setCreatedEvent(response.data);
       onSubmit(response.data);
       console.log('Uspesno kreiran događaj:', response.data);
-      toast.success('Događaj je uspešno kreiran!', {
-        position: 'top-right',
-        autoClose: 2000, 
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      prikaziToast('Sistem je zapamtio događaj.', true);
     } catch (error) {
       console.error('Greška prilikom kreiranja događaja:', error);
       if (error.response && error.response.status === 422) {
-        toast.error('Greška: Loše uneti podaci! Molimo proverite unos.', {
-          position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        prikaziToast('Greška: Loše uneti podaci! Molimo proverite unos.', false);
       } else {
         // Opšta greška za sve ostale situacije
-        toast.error('Greška prilikom kreiranja događaja!', {
-          position: 'top-right',
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        prikaziToast('Sistem ne može da zapamti događaj.', false);
       }}
   };
 
@@ -180,14 +153,14 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
     //   return; 
     // }
     if (!eventName) {
-      alert('Naziv događaja je obavezan!');
+      prikaziToast('Naziv događaja je obavezan!',false);
       return; 
     }
     console.log(selectedEventType);
     console.log(izabraniTipGoogle);
     const eventData = {
-      idTipaDogadjaja: izabraniTipGoogle.id?izabraniTipGoogle.id:7,
-      nazivTipaDogadjaja: izabraniTipGoogle.naziv,
+      idTipaDogadjaja: izabraniTipGoogle?izabraniTipGoogle.id:7,
+      nazivTipaDogadjaja: izabraniTipGoogle?izabraniTipGoogle.naziv:"Razno",
       naslov: eventName,
       datumVremeOd: startTime,
       datumVremeDo: endTime,
@@ -230,11 +203,14 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
     try
     {
       console.log(eventData);
-      const response = api.googleRedirect(eventData);
-     window.open(response.data.authUrl, '_blank');  
+      const response = await api.googleRedirect(eventData);
+      //prikaziToast('Sistem je zapamtio događaj u Google kalendaru.', true);
+      //onSubmit(response.data);
+      window.open(response.data.authUrl, '_blank');  
     }  
     catch (error) {
       console.error('Greška prilikom kreiranja događaja:', error);
+      prikaziToast("Sistem ne može da zapamti događaj u Google kalendaru.",false)
     }
   };
 

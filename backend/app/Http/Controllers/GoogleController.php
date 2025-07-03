@@ -60,10 +60,13 @@ class GoogleController extends Controller
 
 
                 $sessionContent = File::get($lastFile);
-                // dd($sessionContent);
+                //  dd($sessionContent);
                 $sessionArray = unserialize($sessionContent);
-
-
+                //dd($sessionArray);
+                if (!$request->session()->has('eventData')) {
+                    // Očisti sesiju ili osveži pre nego što pristupiš podacima
+                    $request->session()->regenerate();
+                }
                 $eventDataArray = $sessionArray['eventData'] ?? null;
                 //dd($eventDataArray);
 
@@ -109,9 +112,9 @@ class GoogleController extends Controller
                 $startDateTime = new \DateTime($eventDataArray['datumVremeOd'], new \DateTimeZone('Europe/Belgrade'));
                 $endDateTime = new \DateTime($eventDataArray['datumVremeDo'], new \DateTimeZone('Europe/Belgrade'));
 
-
                 $startDateTimeUTC = $startDateTime->setTimezone(new \DateTimeZone('UTC'));
                 $endDateTimeUTC = $endDateTime->setTimezone(new \DateTimeZone('UTC'));
+                $visibility = isset($eventDataArray['privatnost']) && $eventDataArray['privatnost'] ? 'private' : 'public';
                 $event = new \Google\Service\Calendar\Event([
                     'summary' => $eventDataArray['naslov'] ?? 'Naziv',
                     'start' => [
@@ -122,7 +125,7 @@ class GoogleController extends Controller
                         'dateTime' => $endDateTimeUTC->format(\DateTime::ATOM),
                         'timeZone' => 'UTC',
                     ],
-                    'visibility' => $eventDataArray['privatnost'] ? 'private' : 'public'
+                    'visibility' => $visibility
                 ]);
                 // dd($event->start);
 
@@ -138,7 +141,7 @@ class GoogleController extends Controller
                 if (isset($eventDataArray['reminders']['overrides']) && is_array($eventDataArray['reminders'])) {
                     $useDefault = $eventDataArray['reminders']['useDefault'];
                     $reminders->setUseDefault($useDefault === 'true');
-
+                    
                     if ($useDefault === 'false') {
                         $overrides = [];
                         foreach ($eventDataArray['reminders']['overrides'] as $reminder) {
@@ -160,8 +163,15 @@ class GoogleController extends Controller
 
                 return redirect()->away($event->htmlLink);
             } catch (\Exception $e) {
-
-                return redirect()->route('calendar.event.create')->withErrors('Failed to create event: ' . $e->getMessage());
+                return response()->json([
+                    'error' => [
+                        'message' => $e->getMessage(),
+                        'code' => $e->getCode(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]
+                ], 500);
             }
         } else {
             return redirect()->route('calendar.event.create')->withErrors('Failed to retrieve authorization code.');
@@ -185,6 +195,7 @@ class GoogleController extends Controller
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // onemogucivanje SSL verifikacije
 
+                    curl_exec($ch);
                     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                     curl_close($ch);
         

@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import { prikaziToast } from "./toast";
 const MapDisplay = ({ address, showMap }) => {
   const [coordinates, setCoordinates] = useState(null);
+  const [errorShown, setErrorShown] = useState(false);
 
   useEffect(() => {
-    if (showMap) {
+    if (showMap  && !errorShown) {
       const apiUrl = `http://127.0.0.1:8000/api/vratiKoordinate/${encodeURIComponent(
         address
       )}`;
       fetchCoordinates(apiUrl);
     }
   }, [showMap]); // useEffect se poziva kada se promeni showMap
-
+  
   const fetchCoordinates = async (apiUrl) => {
     try {
       const response = await axios.get(apiUrl);
@@ -21,6 +22,8 @@ const MapDisplay = ({ address, showMap }) => {
       setCoordinates({ latitude, longitude });
     } catch (error) {
       console.error("Greška prilikom dohvatanja koordinata:", error.message);
+      if (!errorShown){prikaziToast("Sistem ne može da učita lokaciju događaja.",false);
+      setErrorShown(true);}
     }
   };
 

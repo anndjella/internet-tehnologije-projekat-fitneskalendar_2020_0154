@@ -18,7 +18,7 @@ class UserController extends Controller
         if (Cache::has($key)) {
             $korisnici = Cache::get($key);
         } else{
-            $korisnici=User::all();
+            $korisnici = User::where('id', '!=', auth()->id())->get();
             Cache::put($key, $korisnici, now()->addMinutes(1));
         }
        

@@ -117,3 +117,19 @@
   padding: 8px 12px;
   font-size: 14px;
 }
+input[type="checkbox"]{
+height: 13px;
+margin-bottom: 0px;
+}
+.googleDugme{
+  background-color: #f8d7da;
+  color: rgb(0, 0, 0);
+  border: none;
+}
+.googleDugme:hover{
+  background-color: #ccc;
+}
+.google-icon{
+  margin-left: 4px;
+  margin-bottom: 4px;
+}

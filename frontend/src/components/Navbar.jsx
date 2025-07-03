@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import axios from 'axios';
-import api from "../Api";
+import api from "../ApiService";
 const Navbar = ({ role,handleRoleChange }) => {
   const navigate = useNavigate();
 

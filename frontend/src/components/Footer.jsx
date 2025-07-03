@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./Footer.css";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import api from "../Api";
+import api from "../ApiService";
+import { toast } from "react-toastify";
+
 
 const Footer = ({ onEventTypeSelect, showAllEvents,showMyEvents }) => {
   const [eventTypes, setEventTypes] = useState([]);
@@ -21,6 +22,29 @@ const Footer = ({ onEventTypeSelect, showAllEvents,showMyEvents }) => {
       fetchEventTypes();
     }
   }, []);
+  const prikaziToast = (poruka, uspesno) => {
+    if (uspesno) {
+      toast.success(poruka, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      toast.error(poruka, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
 
   const fetchEventTypes = async () => {
     try {
@@ -73,14 +97,16 @@ const Footer = ({ onEventTypeSelect, showAllEvents,showMyEvents }) => {
       // console.log(newEventType);
       setShowForm(false);
       console.log("Novi tip događaja je uspešno dodat:", response.data.data);
+      prikaziToast("Sistem je zapamtio tip događaja.",true);
     } catch (error) {
       console.error("Greška pri dodavanju novog tipa događaja:", error);
+      prikaziToast("Sistem ne može da zapamti tip događaja.",false);
     }
   };
 
   const handleDeleteEventType = async (id, idKorisnika) => {
     if (idKorisnika === null) {
-      alert("Ne možete obrisati javni tip događaja.");
+      prikaziToast("Ne možete obrisati javni tip događaja.",false);
       return;
     }
 
@@ -99,8 +125,10 @@ const Footer = ({ onEventTypeSelect, showAllEvents,showMyEvents }) => {
       await api.izbrisiTipDogadjaja(id,authToken);
       setEventTypes(eventTypes.filter((type) => type.id !== id));
       console.log("Tip događaja je uspešno obrisan.");
+      prikaziToast("Sistem je izbrisao tip događaja",true);
     } catch (error) {
       console.error("Greška pri brisanju tipa događaja:", error);
+      prikaziToast("Sistem ne može da izbriše tip događaja",false);
     }
   };
 

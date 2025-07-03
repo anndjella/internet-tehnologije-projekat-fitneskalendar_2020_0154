@@ -27,6 +27,7 @@
 .form-group textarea {
   width: 100%;
   padding: 3px;
+  height: 28px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 3px;
@@ -45,10 +46,13 @@
   margin-right: 7px;
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
+.btn-primary:hover,
+.btn-primary-izmeni {
+  background-color: #0d6efd;
 }
-
+.btn-primary-izmeni{
+  color: white;
+}
 
 
 

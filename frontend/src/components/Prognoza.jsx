@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Chart } from 'react-google-charts';
 import './Prognoza.css'; 
-import api from "../Api";
+import api from "../ApiService";
 
 const WeatherForecast = () => {
     const [city, setCity] = useState('');
@@ -94,10 +94,10 @@ const WeatherForecast = () => {
                 </ul>
                 <div className="pagination">
                     <button onClick={handlePrevDay} disabled={currentPage === 0}>
-                        Previous
+                        Prethodni
                     </button>
                     <button onClick={handleNextDay} disabled={currentPage === dates.length - 1}>
-                        Next
+                        Sledeći
                     </button>
                     <button onClick={handleShowChart}>Prikaži promenu temperature</button>
                 </div>
@@ -156,7 +156,7 @@ const WeatherForecast = () => {
             <div className="kontejner">
             <form onSubmit={handleSubmit} className="input-form">
                 <div className="input-container">
-                    <label htmlFor="cityInput">Unesite grad:</label>
+                    <label htmlFor="cityInput">Unesite mesto:</label>
                     <input
                         type="text"
                         id="cityInput"

@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import './LoginPage.css';
-import api from'../Api'
+import api from'../ApiService'
 
 const LoginPage = ({ handleRoleChange }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
   let timeoutId = null;
 
@@ -41,7 +44,9 @@ const LoginPage = ({ handleRoleChange }) => {
       console.error('There was an error logging in!', error);
     }
   };
-
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword); // promena vidljivosti lozinke
+  };
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('expiration');
@@ -57,7 +62,7 @@ const LoginPage = ({ handleRoleChange }) => {
       <div className="login-container">
         <h1>Prijava</h1>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className="form-groupp">
             <label>Email</label>
             <input
               type="email"
@@ -66,7 +71,7 @@ const LoginPage = ({ handleRoleChange }) => {
               required
             />
           </div>
-          <div className="form-group">
+          {/* <div className="form-group">
             <label>Lozinka</label>
             <input
               type="password"
@@ -74,9 +79,22 @@ const LoginPage = ({ handleRoleChange }) => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-          </div>
+          </div> */}
+          <div className="password-container">
+          <label>Lozinka</label>
+            <input
+              type={showPassword ? 'text' : 'password'} 
+              // type='tes'
+               value={password}
+               onChange={(e) => setPassword(e.target.value)}
+               required
+            />
+            <span className="password-icon" onClick={togglePasswordVisibility}>
+              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+            </span>
+            </div>
           {error && <p className="error">{error}</p>}
-          <button type="submit">Prijavi se</button>
+          <button type="submit" class='loginDugme'>Prijavi se</button>
         </form>
         <p>Nemate nalog? <Link to="/register" className="register-link">Registrujte se</Link></p>
       </div>
