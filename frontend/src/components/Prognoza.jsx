@@ -80,12 +80,12 @@ const WeatherForecast = () => {
                     {data.map((item, index) => (
                         <li key={index}>
                             <b><div>{item.time}</div></b>
-                            <div>Temperatura: {item.temperature} °C</div>
-                            <div>Opis: {item.description}</div>
-                            <div>Minimalna temperatura: {item.min_temperature} °C</div>
-                            <div>Maksimalna temperatura: {item.max_temperature} °C</div>
-                            <div>Subjektivni osećaj: {item.feels_like} °C</div>
-                            <div>Vlažnost: {item.humidity}%</div>
+                            <div>Temperature: {item.temperature} °C</div>
+                            <div>Description: {item.description}</div>
+                            <div>Min temperature: {item.min_temperature} °C</div>
+                            <div>Max temperature: {item.max_temperature} °C</div>
+                            <div>Subjective feeling: {item.feels_like} °C</div>
+                            <div>humidity : {item.humidity}%</div>
                             <div className="forecast-icon">
                                 <img src={`https://openweathermap.org/img/wn/${item.icon}.png`} alt="Weather icon" />
                             </div>
@@ -94,12 +94,12 @@ const WeatherForecast = () => {
                 </ul>
                 <div className="pagination">
                     <button onClick={handlePrevDay} disabled={currentPage === 0}>
-                        Prethodni
+                        Previous
                     </button>
                     <button onClick={handleNextDay} disabled={currentPage === dates.length - 1}>
-                        Sledeći
+                        Next
                     </button>
-                    <button onClick={handleShowChart}>Prikaži promenu temperature</button>
+                    <button onClick={handleShowChart}>Show temperature change</button>
                 </div>
                 
                 {showChart && chartData && (
@@ -107,18 +107,18 @@ const WeatherForecast = () => {
                         width={'100%'}
                         height={'400px'}
                         chartType="LineChart"
-                        loader={<div>Učitavanje dijagrama...</div>}
+                        loader={<div>Loading chart...</div>}
                         data={[
-                            ['Vreme', 'Temperatura'],
+                            ['Time', 'Temperature'],
                             ...chartData
                         ]}
                         options={{
-                            title: `Promena temperature za ${new Date(date).toLocaleDateString('sr-RS')}`,
+                            title: `Temperature change for ${new Date(date).toLocaleDateString('sr-RS')}`,
                             hAxis: {
-                                title: 'Vreme'
+                                title: 'Time'
                             },
                             vAxis: {
-                                title: 'Temperatura (°C)'
+                                title: 'Temperature (°C)'
                             }
                         }}
                         rootProps={{ 'data-testid': '1' }}
@@ -156,7 +156,7 @@ const WeatherForecast = () => {
             <div className="kontejner">
             <form onSubmit={handleSubmit} className="input-form">
                 <div className="input-container">
-                    <label htmlFor="cityInput">Unesite mesto:</label>
+                    <label htmlFor="cityInput">Enter a location:</label>
                     <input
                         type="text"
                         id="cityInput"
@@ -164,13 +164,13 @@ const WeatherForecast = () => {
                         onChange={handleCityChange}
                         required
                     />
-                    <button type="submit">Prognoza</button>
+                    <button type="submit">Forecast</button>
                 </div>
             </form>
             {/* <button className="location-button"  onClick={fetchCurrentLocation}>Dobavi moju lokaciju</button> */}
             </div>
             {loading ? (
-                <div>Učitava se...</div>
+                <div>Loading...</div>
             ) : (
                 <>
                     {error && <div className="error-message">{error}</div>}

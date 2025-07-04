@@ -112,12 +112,12 @@ const RegisterPage = ({ handleRoleChange }) => {
   return (
     <div className="register-page">
       <div className="register-form">
-        <h1>Registracija</h1>
+        <h1>Registration</h1>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
             name="ime"
-            placeholder="Ime"
+            placeholder="Name"
             value={formData.ime}
             onChange={handleChange}
             required
@@ -125,7 +125,7 @@ const RegisterPage = ({ handleRoleChange }) => {
           <input
             type="text"
             name="prezime"
-            placeholder="Prezime"
+            placeholder="Last name"
             value={formData.prezime}
             onChange={handleChange}
             required
@@ -142,7 +142,7 @@ const RegisterPage = ({ handleRoleChange }) => {
             <input
               type={showPassword ? 'text' : 'password'} 
               name="password"
-              placeholder="Lozinka"
+              placeholder="Password"
               value={formData.password}
               onChange={handleChange}
               required
@@ -155,7 +155,7 @@ const RegisterPage = ({ handleRoleChange }) => {
             <input
               type={showConfirmPass ? 'text' : 'password'}
               name="password_confirmation"
-              placeholder="Potvrdi lozinku"
+              placeholder="Confirm password"
               value={formData.password_confirmation}
               onChange={handleChange}
               required
@@ -166,15 +166,15 @@ const RegisterPage = ({ handleRoleChange }) => {
             </div>
           {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
           {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
-          <button type="submit">Registruj se</button>
+          <button type="submit">Register</button>
         </form>
         <p>
-          Već imate nalog?{" "}
+          Already have an account?{" "}
           <a
             href="/login"
             style={{ color: "#007bff", textDecoration: "underline" }}
           >
-            Ulogujte se
+            Log in
           </a>
         </p>
       </div>

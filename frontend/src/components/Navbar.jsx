@@ -40,25 +40,25 @@ const Navbar = ({ role,handleRoleChange }) => {
   return (
     <div className="navbar">
       <div className="left-links">
-        <Link to="/" onClick={handleNavigateHome}>Kalendar</Link>
-        <Link to="/weather">Vremenska Prognoza</Link>
+        <Link to="/" onClick={handleNavigateHome}>Calendar</Link>
+        <Link to="/weather">Weather forecast</Link>
       </div>
       <div className="right-links">
         {role === 'guest' && (
           <>
-            <Link to="/register" className="auth-link">Registruj se</Link>
-            <Link to="/login" className="auth-link">Prijavi se</Link>
+            <Link to="/register" className="auth-link">Sign up</Link>
+            <Link to="/login" className="auth-link">Sign in</Link>
           </>
         )}
         {role === 'admin' && (
           <>
-            <Link to="/korisnici">Korisnici</Link>
-            <Link to="/" onClick={handleLogoutAndChangeRole}>Odjavi se</Link>
+            <Link to="/korisnici">Users</Link>
+            <Link to="/" onClick={handleLogoutAndChangeRole}>Log out</Link>
           </>
         )}
         {role === 'ulogovan' && (
           
-          <Link to="/" onClick={handleLogoutAndChangeRole}>Odjavi se</Link>
+          <Link to="/" onClick={handleLogoutAndChangeRole}>Log out</Link>
         )}
       </div>
     </div>

@@ -25,19 +25,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Obaveštenje za događaj</title>
+    <title>Notification for an event</title>
 </head>
 <body>
      
-    <p>Poštovani,</p>
+    <p>Dear,</p>
     
-    <p>Ovo je podsetnik za događaj koji se približava:</p>
+    <p>This is a reminder for an upcoming event:</p>
     
-    <p><strong>Naslov događaja:</strong> {{ $dogadjaj->naslov }}</p>
-    <p><strong>Vreme događaja:</strong> {{ $dogadjaj->datumVremeOd }}</p>
-    <p><strong>Poruka:</strong> {{ $notifikacija->poruka }}</p>
+    <p><strong>Event title:</strong> {{ $dogadjaj->naslov }}</p>
+    <p><strong>Time of an event:</strong> {{ $dogadjaj->datumVremeOd }}</p>
+    <p><strong>Message:</strong> {{ $notifikacija->poruka }}</p>
     
-    <p>Hvala Vam,</p>
-    <p>Vaš interaktivni kalendar!</p>
+    <p>Sincerely,</p>
+    <p>Your interactive calendar!</p>
 </body>
 </html>

@@ -36,7 +36,7 @@ class NotifikacijaMail extends Mailable
     {
         // echo ("0");
         return new Envelope(
-            subject: 'Obaveštenje za događaj',
+            subject: 'Notification for an event',
         );
     }
 
@@ -54,7 +54,7 @@ class NotifikacijaMail extends Mailable
     public function build()
     {
         return $this
-        ->subject('Notifikacija za događaj: ' . $this->dogadjaj->naslov)
+        ->subject('Notification for an event: ' . $this->dogadjaj->naslov)
         ->view('notifikacija.blade')
         ->with([
             'notifikacija' => $this->notifikacija,

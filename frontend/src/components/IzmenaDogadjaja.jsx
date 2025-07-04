@@ -94,40 +94,40 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
       );
       // onUpdate(response.data);
       onUpdate(response.data);
-      prikaziToast("Sistem je izmenio događaj.",true);
+      prikaziToast("Event has been edited.",true);
     } catch (error) {
       console.error("Error updating event:", error);
       if(error.response="Podaci nisu validni: The notifikacije.0.vremeSlanja must be a date after or equal to now."){
-        prikaziToast("Ne možete uneti podsetnike za događaj koji je već prošao",false);
+        prikaziToast("You can't enter reminders for event that already passed.",false);
       }else
       if (error.response && error.response.status === 422) {
-        prikaziToast("Greška: Loše uneti podaci! Molimo proverite unos.",false);
+        prikaziToast("Error: Invalid input! Please check your entries.",false);
       } else {
-        prikaziToast("Sistem ne može da izmeni događaj.",false);
+        prikaziToast("The event could not be edited",false);
       }
     }
   };
 
-  const generateReminderMessage = (value) => {
-    switch (value) {
-      case "day_before":
-        return `Dogadjaj pocinje za 24h.`;
-      case "hour_before":
-        return `Dogadjaj pocinje za sat vremena.`;
-      case "2_hours_before":
-        return `Dogadjaj pocinje za 2 sata.`;
-      case "15_minutes_before":
-        return `Dogadjaj pocinje za 15 minuta.`;
-      case "30_minutes_before":
-        return `Dogadjaj pocinje za pola sata.`;
-      case "45_minutes_before":
-        return `Dogadjaj pocinje za 45 minuta.`;
-      case "exact_time":
-        return `Dogadjaj pocinje sada.`;
-      default:
-        return "";
-    }
-  };
+ const generateReminderMessage = (value) => {
+  switch (value) {
+    case 'day_before':
+      return `The event starts in 24 hours.`;
+    case 'hour_before':
+      return `The event starts in one hour.`;
+    case '2_hours_before':
+      return `The event starts in 2 hours.`;
+    case '15_minutes_before':
+      return `The event starts in 15 minutes.`;
+    case '30_minutes_before':
+      return `The event starts in 30 minutes.`;
+    case '45_minutes_before':
+      return `The event starts in 45 minutes.`;
+    case 'exact_time':
+      return `The event is starting now.`;
+    default:
+      return '';
+  }
+};
 
   const calculateReminderTime = (reminderValue, startTime) => {
     let reminderTime = moment(startTime);
@@ -158,20 +158,20 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
     return reminderTime;
   };
   const reminderOptions = [
-    { value: "day_before", label: "Dan pred" },
-    { value: "hour_before", label: "1h pred" },
-    { value: "2_hours_before", label: "2h pred" },
-    { value: "15_minutes_before", label: "15min pred" },
-    { value: "30_minutes_before", label: "30min pred" },
-    { value: "45_minutes_before", label: "45min pred" },
-    { value: "exact_time", label: "U vreme događaja" },
-    { value: "no_reminder", label: "Bez" },
+    { value: 'day_before', label: 'Day beofre' },
+    { value: 'hour_before', label: '1h before' },
+    { value: '2_hours_before', label: '2h before' },
+    { value: '15_minutes_before', label: '15min before' },
+    { value: '30_minutes_before', label: '30min before' },
+    { value: '45_minutes_before', label: '45min before' },
+    { value: 'exact_time', label: 'At the time of the event' },
+    { value: 'no_reminder', label: 'None' },
   ];
 
   const handleAddReminder = (selectedOptions) => {
     if (selectedOptions.some((option) => option.value === "no_reminder")) {
       setReminders([]);
-      setSelectedReminderOptions([{ value: "no_reminder", label: "Bez" }]);
+      setSelectedReminderOptions([{ value: "no_reminder", label: "None" }]);
     } else {
       setReminders(selectedOptions || []);
       setSelectedReminderOptions(selectedOptions || []);
@@ -220,7 +220,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group">
-        <label>Ime događaja:</label>
+        <label>Name of an event:</label>
         <input
           type="text"
           value={title}
@@ -228,7 +228,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
         />
       </div>
       <div className="form-group">
-        <label>Lokacija:</label>
+        <label>Location:</label>
         <input
           type="text"
           value={location}
@@ -237,7 +237,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
       </div>
       <div className="form-group">
         <label>
-          Opis događaja:
+          Description:
           <textarea
             className="form-control"
             value={description}
@@ -247,7 +247,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
       </div>
       <div className="form-group">
         <label>
-          Tip događaja:
+          Event type:
           <select
             className="form-control"
             value={selectedEventType}
@@ -265,7 +265,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
       </div>
       <div className="form-group">
         <label>
-          Trenutni podsetnici:
+          Current reminders:
           <div className="reminder-container">
             <Select
               options={reminderOptions}
@@ -282,7 +282,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
           </div>
         </label>
         <label>
-          Novi željeni podsetnici:
+         New desired reminders:
           <div className="reminder-container">
             <Select
               options={reminderOptions}
@@ -295,7 +295,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
         </label>
       </div>
       <label>
-        Javni događaj:
+        Public event:
         <input
           type="checkbox"
           checked={isPublic}
@@ -304,7 +304,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
         />
       </label>
       <div className="form-group">
-        <label>Početak:</label>
+        <label>Start:</label>
         <input
           type="datetime-local"
           value={start}
@@ -312,7 +312,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
         />
       </div>
       <div className="form-group">
-        <label>Kraj:</label>
+        <label>End:</label>
         <input
           type="datetime-local"
           value={end}
@@ -326,7 +326,7 @@ const EditEventForm = ({ initialValues, onUpdate, onCancel, idDogadjaja }) => {
       </div> */}
 
       <button type="submit" className="btn btn-primary-izmeni">
-        Izmeni
+        Edit
       </button>
     </form>
   );

@@ -10,6 +10,12 @@ export const prikaziToast = (poruka, uspesno) => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
+      style: {
+      minWidth: "300px",
+      fontSize: "16px",
+      lineHeight: "1.5",
+      whiteSpace: "pre-line", // omogucava bolji prikaz ako ima više linija
+    }
     });
   } else {
     toast.error(poruka, {
@@ -20,6 +26,12 @@ export const prikaziToast = (poruka, uspesno) => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
+      style: {
+      minWidth: "300px",
+      fontSize: "16px",
+      lineHeight: "1.5",
+      whiteSpace: "pre-line", // omogucava bolji prikaz ako ima više linija
+    }
     });
   }
 };

@@ -60,7 +60,7 @@ const LoginPage = ({ handleRoleChange }) => {
   return (
     <div className="login-page">
       <div className="login-container">
-        <h1>Prijava</h1>
+        <h1>Log in</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-groupp">
             <label>Email</label>
@@ -81,7 +81,7 @@ const LoginPage = ({ handleRoleChange }) => {
             />
           </div> */}
           <div className="password-container">
-          <label>Lozinka</label>
+          <label>Password</label>
             <input
               type={showPassword ? 'text' : 'password'} 
               // type='tes'
@@ -94,9 +94,9 @@ const LoginPage = ({ handleRoleChange }) => {
             </span>
             </div>
           {error && <p className="error">{error}</p>}
-          <button type="submit" class='loginDugme'>Prijavi se</button>
+          <button type="submit" class='loginDugme'>Log in</button>
         </form>
-        <p>Nemate nalog? <Link to="/register" className="register-link">Registrujte se</Link></p>
+        <p>Don't have an account yet? <Link to="/register" className="register-link">Register</Link></p>
       </div>
     </div>
   );

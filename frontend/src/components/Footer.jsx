@@ -97,21 +97,21 @@ const Footer = ({ onEventTypeSelect, showAllEvents,showMyEvents }) => {
       // console.log(newEventType);
       setShowForm(false);
       console.log("Novi tip događaja je uspešno dodat:", response.data.data);
-      prikaziToast("Sistem je zapamtio tip događaja.",true);
+      prikaziToast("Event type has been saved.",true);
     } catch (error) {
       console.error("Greška pri dodavanju novog tipa događaja:", error);
-      prikaziToast("Sistem ne može da zapamti tip događaja.",false);
+      prikaziToast("Event type could not be saved.",false);
     }
   };
 
   const handleDeleteEventType = async (id, idKorisnika) => {
     if (idKorisnika === null) {
-      prikaziToast("Ne možete obrisati javni tip događaja.",false);
+      prikaziToast("You can't delete public event type.",false);
       return;
     }
 
     const confirmDelete = window.confirm(
-      "Da li ste sigurni da želite da obrišete ovaj tip događaja?"
+      "Are you sure you want to delete this event type?"
     );
     if (!confirmDelete) return;
 
@@ -125,10 +125,10 @@ const Footer = ({ onEventTypeSelect, showAllEvents,showMyEvents }) => {
       await api.izbrisiTipDogadjaja(id,authToken);
       setEventTypes(eventTypes.filter((type) => type.id !== id));
       console.log("Tip događaja je uspešno obrisan.");
-      prikaziToast("Sistem je izbrisao tip događaja",true);
+      prikaziToast("Event type has been deleted.",true);
     } catch (error) {
       console.error("Greška pri brisanju tipa događaja:", error);
-      prikaziToast("Sistem ne može da izbriše tip događaja",false);
+      prikaziToast("Event type could not be deleted",false);
     }
   };
 
@@ -136,7 +136,7 @@ const Footer = ({ onEventTypeSelect, showAllEvents,showMyEvents }) => {
     <div className="footer">
       <div className="left-links">
         <div className="dropdown">
-          <button className="dropbtn">Tipovi Događaja</button>
+          <button className="dropbtn">Event types</button>
           <div className="dropdown-content">
             {eventTypes.map((type) => (
               <div
@@ -174,10 +174,10 @@ const Footer = ({ onEventTypeSelect, showAllEvents,showMyEvents }) => {
         </div>
         {/* <button className="new-type-btn" onClick={() => setShowForm(!showForm)}>Novi tip</button> */}
         <button className="show-all-btn" onClick={handleShowAllEvents}>
-          Svi događaji
+          All events
         </button>
         <button className="show-my-btn" onClick={handleShowMyEvents}>
-          Moji događaji
+          My events
         </button>
       </div>
       {showForm && (
@@ -191,26 +191,26 @@ const Footer = ({ onEventTypeSelect, showAllEvents,showMyEvents }) => {
             </button>
             <form onSubmit={handleSubmitNewEventType}>
               <label htmlFor="naziv">
-                Naziv tipa <span className="required">*</span>
+                Name <span className="required">*</span>
               </label>
               <input
                 type="text"
                 name="naziv"
-                placeholder="Naziv tipa događaja"
+                placeholder="Name of an event type"
                 value={newEventType.naziv}
                 onChange={handleNewEventTypeChange}
                 required
               />
-              <label>Opis tipa</label>
+              <label>Description</label>
               <input
                 type="text"
                 name="opis"
-                placeholder="Opis tipa događaja"
+                placeholder="Description of an event type"
                 value={newEventType.opis}
                 onChange={handleNewEventTypeChange}
               />
               <button class="submit-button" type="submit">
-                Dodaj tip događaja
+                Add event type
               </button>
             </form>
           </div>

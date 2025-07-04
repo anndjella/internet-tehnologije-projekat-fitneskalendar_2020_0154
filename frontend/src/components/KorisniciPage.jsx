@@ -43,11 +43,11 @@ const Korisnici = () => {
     try {
       const response = await api.izbrisiKorisnika(id);
       console.log(response);
-      prikaziToast("Sistem je izmenio korisnika.",true);
+      prikaziToast("User has been edited.",true);
       fetchUsers();
     } catch (error) {
       console.error("Greška prilikom brisanja korisnika:", error);
-      prikaziToast("Sistem ne može da izmeni korisnika.",false);
+      prikaziToast("User could not be edited.",false);
     }
   };
 
@@ -66,10 +66,10 @@ const Korisnici = () => {
       await api.izmeniKorisnika(id,updatedData);
       setEditingUser(null);
       fetchUsers();
-      prikaziToast("Sistem je izmenio korisnika.",true);
+      prikaziToast("User has been edited.",true);
     } catch (error) {
       console.error("Greška prilikom izmene korisnika:", error);
-      prikaziToast("Sistem ne može da izmeni korisnika.",false);
+      prikaziToast("User could not be edited.",false);
     }
   };
 
@@ -105,18 +105,18 @@ const Korisnici = () => {
     <div className="admin-page">
       <input
         type="text"
-        placeholder="Pretraga korisnika"
+        placeholder="Search users"
         value={searchQuery}
         onChange={handleSearch}
       />
       <label class="labela">
         <input type="checkbox" checked={sortByLastName} onChange={handleSort} />
-          <span class="sort">Sortiraj po prezimenu</span> 
+          <span class="sort">Sort by Last name</span> 
       </label>
       <ul>
         <li className="header">
-          <div>Ime</div>
-          <div>Prezime</div>
+          <div>Name</div>
+          <div>Last name</div>
           <div>Email</div>
         </li>
         {sortedUsers.map((user) => (
@@ -125,9 +125,9 @@ const Korisnici = () => {
             <div>{user.prezime}</div>
             <div>{user.email}</div>
             <div className="actions">
-              <button onClick={() => handleEdit(user)}>Izmeni</button>
+              <button onClick={() => handleEdit(user)}>Edit</button>
               <Popup
-                trigger={<button>Obriši</button>}
+                trigger={<button>Delete</button>}
                 modal
                 closeOnDocumentClick={false}
                 contentStyle={{ width: "fit-content", padding: "20px" }}
@@ -135,7 +135,7 @@ const Korisnici = () => {
                 {(close) => (
                   <div className="popup-content">
                     <h5>
-                      Da li ste sigurni da želite da obrišete korisnika {user.ime}{" "}
+                      Are you sure you want to delete user {user.ime}{" "}
                       {user.prezime}?
                     </h5>
                     <div className="popup-actions">
@@ -145,9 +145,9 @@ const Korisnici = () => {
                           close();
                         }}
                       >
-                        Da
+                        Yes
                       </button>
-                      <button onClick={close}>Ne</button>
+                      <button onClick={close}>No</button>
                     </div>
                   </div>
                 )}
@@ -165,9 +165,9 @@ const Korisnici = () => {
             }}
             className="edit-user-form"
           >
-            <h3>Izmeni korisnika</h3>
+            <h3>Edit user</h3>
             <label>
-              Ime:
+              Name:
               <input
                 type="text"
                 name="ime"
@@ -176,7 +176,7 @@ const Korisnici = () => {
               />
             </label>
             <label>
-              Prezime:
+              Last name:
               <input
                 type="text"
                 name="prezime"
@@ -194,9 +194,9 @@ const Korisnici = () => {
               />
             </label>
             <div className="form-actions">
-              <button type="submit">Sačuvaj</button>
+              <button type="submit">Save</button>
               <button type="button" onClick={handleCancelEdit}>
-                Otkaži
+                Cancel
               </button>
             </div>
           </form>

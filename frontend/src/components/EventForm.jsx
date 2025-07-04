@@ -67,37 +67,37 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
       //setCreatedEvent(response.data);
       onSubmit(response.data);
       console.log('Uspesno kreiran događaj:', response.data);
-      prikaziToast('Sistem je zapamtio događaj.', true);
+      prikaziToast('Event has been saved.', true);
     } catch (error) {
-      console.error('Greška prilikom kreiranja događaja:', error);
+      console.error('Failed to create the event:', error);
       if (error.response && error.response.status === 422) {
-        prikaziToast('Greška: Loše uneti podaci! Molimo proverite unos.', false);
+        prikaziToast('Error: Invalid input! Please check your entries.', false);
       } else {
         // Opšta greška za sve ostale situacije
-        prikaziToast('Sistem ne može da zapamti događaj.', false);
+        prikaziToast('The event could not be saved.', false);
       }}
   };
 
-  const generateReminderMessage = (value) => {
-    switch (value) {
-      case 'day_before':
-        return `Dogadjaj pocinje za 24h.`;
-      case 'hour_before':
-        return `Dogadjaj pocinje za sat vremena.`;
-      case '2_hours_before':
-        return `Dogadjaj pocinje za 2 sata.`;
-      case '15_minutes_before':
-        return `Dogadjaj pocinje za 15 minuta.`;
-      case '30_minutes_before':
-        return `Dogadjaj pocinje za pola sata.`;
-      case '45_minutes_before':
-        return `Dogadjaj pocinje za 45 minuta.`;
-      case 'exact_time':
-        return `Dogadjaj pocinje sada.`;
-     default:
+ const generateReminderMessage = (value) => {
+  switch (value) {
+    case 'day_before':
+      return `The event starts in 24 hours.`;
+    case 'hour_before':
+      return `The event starts in one hour.`;
+    case '2_hours_before':
+      return `The event starts in 2 hours.`;
+    case '15_minutes_before':
+      return `The event starts in 15 minutes.`;
+    case '30_minutes_before':
+      return `The event starts in 30 minutes.`;
+    case '45_minutes_before':
+      return `The event starts in 45 minutes.`;
+    case 'exact_time':
+      return `The event is starting now.`;
+    default:
       return '';
-    }
-  };
+  }
+};
   
   const calculateReminderTime = (reminderValue, startTime) => {
     let reminderTime = moment(startTime); 
@@ -128,19 +128,19 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
   return reminderTime;
   };
   const reminderOptions = [
-    { value: 'day_before', label: 'Dan pred' },
-    { value: 'hour_before', label: '1h pred' },
-    { value: '2_hours_before', label: '2h pred' },
-    { value: '15_minutes_before', label: '15min pred' },
-    { value: '30_minutes_before', label: '30min pred' },
-    { value: '45_minutes_before', label: '45min pred' },
-    { value: 'exact_time', label: 'U vreme događaja' },
-    { value: 'no_reminder', label: 'Bez' },
+    { value: 'day_before', label: 'Day beofre' },
+    { value: 'hour_before', label: '1h before' },
+    { value: '2_hours_before', label: '2h before' },
+    { value: '15_minutes_before', label: '15min before' },
+    { value: '30_minutes_before', label: '30min before' },
+    { value: '45_minutes_before', label: '45min before' },
+    { value: 'exact_time', label: 'At the time of the event' },
+    { value: 'no_reminder', label: 'None' },
   ];
   const handleAddReminder = (selectedOptions) => {
     if (selectedOptions.some(option => option.value === 'no_reminder')) {
       setReminders([]);
-      setSelectedReminderOptions([{ value: 'no_reminder', label: 'Bez' }]);
+      setSelectedReminderOptions([{ value: 'no_reminder', label: 'None' }]);
     } else {
       setReminders(selectedOptions || []);
       setSelectedReminderOptions(selectedOptions || []);
@@ -153,7 +153,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
     //   return; 
     // }
     if (!eventName) {
-      prikaziToast('Naziv događaja je obavezan!',false);
+      prikaziToast('Event title is required!',false);
       return; 
     }
     console.log(selectedEventType);
@@ -210,7 +210,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
     }  
     catch (error) {
       console.error('Greška prilikom kreiranja događaja:', error);
-      prikaziToast("Sistem ne može da zapamti događaj u Google kalendaru.",false)
+      prikaziToast("The event could not be saved to Google Calendar.",false)
     }
   };
 
@@ -230,7 +230,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
       <div className="form-group">
         
         <label>
-          Ime događaja:
+          Name of an event:
           <input
             type="text"
             name="naslov"
@@ -243,7 +243,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
       </div>
       <div className="form-group">
         <label>
-          Lokacija:
+          Location:
           <input
             type="text"
             className="form-control"
@@ -254,7 +254,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
       </div>
       <div className="form-group">
         <label>
-          Opis događaja:
+         Description:
           <textarea
             className="form-control"
             value={description}
@@ -264,7 +264,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
       </div>
       <div className="form-group">
         <label>
-          Tip događaja:
+          Event type:
           <select
             className="form-control"
             value={selectedEventType}
@@ -272,7 +272,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
             onChange={handleChange}
             // required
           >
-            <option value="">Izaberite tip događaja</option>
+            <option value="">Select event type</option>
             {eventTypes.map((eventType) => (
               <option key={eventType.id} value={eventType.id}>
                 {eventType.naziv}
@@ -283,7 +283,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
       </div>
       <div className="form-group">
         <label>
-          Podsetnici:
+          Reminders:
           <div className="reminder-container">
             <Select       
              options={reminderOptions}
@@ -296,7 +296,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
         </label>
       </div>
       <label>
-        Javni događaj:
+        Public event:
         <input
           type="checkbox"
           checked={isPublic}
@@ -306,7 +306,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
       </label>
       <div className="form-group">
         <label>
-          Početak događaja:
+          Start:
           <input
             type="datetime-local"
             className="form-control"
@@ -318,7 +318,7 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
       </div>
       <div className="form-group">
         <label>
-          Kraj događaja:
+          End:
           <input
             type="datetime-local"
             className="form-control"
@@ -330,9 +330,9 @@ const EventForm = ({ onSubmit, selectedSlot,initialValues }) => {
       </div>
       {/* <button type="submit" className="btn btn-primary"  >Kreiraj događaj</button> */}
       <div className="form-group button-group">
-        <button type="submit" className="btn btn-primary">Kreiraj događaj</button>
+        <button type="submit" className="btn btn-primary">Add event</button>
         <button type="button" className="btn-secondary" onClick={handleGoogleCalendar}>
-          Dodaj u Google kalendar 
+         Add to Google Calendar 
           <FaGoogle className="google-icon" />
         </button>
       </div>

@@ -29,8 +29,12 @@ class IcsController extends Controller
             $icsContent .= "LOCATION:" . Str::limit($event->lokacija, 255) . "\r\n";
             $icsContent .= "END:VEVENT\r\n";
             $icsContent .= "END:VCALENDAR\r\n";
- 
-            $fileName = 'event-' . $event->id . '.ics';
+
+            $cleanTitle = preg_replace('/[^A-Za-z0-9_\-]/', '_', $event->naslov);
+            $cleanTitle = Str::limit($cleanTitle, 50, '');
+
+            $fileName = $cleanTitle . '.ics';
+
             Storage::disk('local')->put($fileName, $icsContent);
  
             return response()->download(storage_path("app/{$fileName}"));

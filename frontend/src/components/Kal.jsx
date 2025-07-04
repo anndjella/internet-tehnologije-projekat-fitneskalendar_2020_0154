@@ -102,7 +102,7 @@ const CombinedCalendar = () => {
         setEvents(transformedEvents);
       } catch (error) {
         console.error("Error fetching events:", error);
-        prikaziToast("Sistem ne može da učita događaje.",false);
+        prikaziToast("Failed to load events.",false);
       }
     };
 
@@ -169,7 +169,7 @@ const CombinedCalendar = () => {
       setEvents(transformedEvents);
     } catch (error) {
       console.error("Error fetching events:", error);
-      prikaziToast("Sistem ne može da učita događaje.",false);
+      prikaziToast("Failed to load events.",false);
     }
   };
 
@@ -191,7 +191,7 @@ const CombinedCalendar = () => {
       setEvents(transformedEvents);
     } catch (error) {
       console.error("Error fetching public events:", error);
-      prikaziToast("Sistem ne može da učita javne događaje.",false);
+      prikaziToast("Failed to load public events.",false);
     }
   };
 
@@ -242,19 +242,19 @@ const CombinedCalendar = () => {
 
   const handleDeleteEvent = async () => {
     const confirmDelete = window.confirm(
-      "Da li ste sigurni da želite da obrišete ovaj događaj?"
+      "Are you sure you want to delete this event?"
     );
     console.log(selectedEvent.id);
     if (confirmDelete) {
       try {
         const response = await api.izbrisiDogadjaj(selectedEvent.id);
         console.log("Dogadjaj je uspešno obrisan", response.data);
-        prikaziToast("Sistem je izbrisao događaj.",true);
+        prikaziToast("Event has been deleted.",true);
         fetchEvents();
         closeModal();
       } catch (error) {
         console.error("Greška prilikom brisanja događaja", error);
-        prikaziToast("Sistem ne može da izbriše događaj.",false);
+        prikaziToast("Event could not be deleted.",false);
       }
     }
   };
@@ -294,19 +294,19 @@ const CombinedCalendar = () => {
       </button>
       <h2>{selectedEvent.title}</h2>
       <p>
-        <strong>Početak:</strong> {moment(selectedEvent.start).format("LLLL")}
+        <strong>Start:</strong> {moment(selectedEvent.start).format("LLLL")}
       </p>
       <p>
-        <strong>Kraj:</strong> {moment(selectedEvent.end).format("LLLL")}
+        <strong>End:</strong> {moment(selectedEvent.end).format("LLLL")}
       </p>
       <p>
-        <strong>Opis:</strong> {selectedEvent.description}
+        <strong>Description:</strong> {selectedEvent.description}
       </p>
       <p>
-        <strong>Lokacija:</strong> {selectedEvent.location}
+        <strong>Location:</strong> {selectedEvent.location}
       </p>
       {selectedEvent.location && (
-        <button onClick={showMapHandler}>Prikaži na mapi</button>
+        <button onClick={showMapHandler}>Show on map</button>
       )}
       {showMap && (
         <MapDisplay address={selectedEvent.location} showMap={showMap} />
@@ -316,18 +316,18 @@ const CombinedCalendar = () => {
       <p><strong>tip:</strong> {selectedEvent.idTipa}</p> */}
       {isAdmin && selectedEvent.email && (
         <p>
-          <strong>Email korisnika koji je kreirao događaj:</strong>{" "}
+          <strong>Email of the user who created the event:</strong>{" "}
           {selectedEvent.email}
         </p>
       )}
       {role !== "guest" && idKorisnika === selectedEvent.idKorisnika && (
         <div>
-          <button onClick={handleEditEvent}>Izmeni</button>
-          <button onClick={handleDeleteEvent}>Obriši</button>
+          <button onClick={handleEditEvent}>Edit</button>
+          <button onClick={handleDeleteEvent}>Delete</button>
         </div>
       )}
       {role === "admin" && idKorisnika !== selectedEvent.idKorisnika && (
-        <button onClick={handleDeleteEvent}>Obriši kao admin</button>
+        <button onClick={handleDeleteEvent}>Delete as admin</button>
       )}
       <button
         onClick={() => {
@@ -335,14 +335,14 @@ const CombinedCalendar = () => {
             window.location.href = `http://127.0.0.1:8000/ics/${selectedEvent.id}`;
           } catch (error) {
             console.error('Greška prilikom preuzimanja .ics fajla:', error);
-            prikaziToast('Sistem ne može da generiše događaj u .ics formatu.',false);
+            prikaziToast('Failed to generate the event in .ics format.',false);
           }
         }}
       >
-        Preuzmi .ics
+        Download as .ics
       </button>
       <button class="googleDugme" onClick={handleGoogleCalendar}>
-        Dodaj u Google kalendar
+        Add to Google calendar
         <FaGoogle className="google-icon" />
         </button>
     </div>
@@ -382,7 +382,7 @@ const CombinedCalendar = () => {
   };
   const onEventDrop = async ({ event, start, end }) => {
     if (idKorisnika !== event.korisnik.id) {
-      prikaziToast("Nemate pravo da menjate ovaj događaj!",false);
+      prikaziToast("You do not have permission to edit this event!",false);
       return;
     }
     const updatedEvent = { ...event, start, end };
@@ -407,9 +407,9 @@ const CombinedCalendar = () => {
     console.log(transformisaniUpdate);
     try {
       const response = await api.izmeniDogadjaj(event.id, transformisaniUpdate);
-      prikaziToast("Uspešno izmenjen datum događaja!",true);
+      prikaziToast("Date of an event has been edited.",true);
     } catch (error) {
-      prikaziToast("Greška pri izmeni datuma događaja!",false);
+      prikaziToast("Date of an event could not be edited.",false);
       setEvents(prevEvents => prevEvents.map(existingEvent =>
         existingEvent.id === event.id
           ? { ...existingEvent, start: event.start, end: event.end }
@@ -433,7 +433,7 @@ const CombinedCalendar = () => {
         eventPropGetter={token ? eventPropGetter : undefined}
         showAllEvents={true}
         selectable={role !== "guest"}
-        messages={messages}
+        // messages={messages}
         onEventDrop={role !== 'guest' ? onEventDrop : undefined}
         
         />
@@ -455,7 +455,7 @@ const CombinedCalendar = () => {
             initialValues={selectedEvent}
             idDogadjaja={selectedEvent.id}
           />
-          <button onClick={handleCloseFormEdit}>Otkaži</button>
+          <button onClick={handleCloseFormEdit}>Cancel</button>
         </div>
       )}
       {showForm && (
@@ -465,7 +465,7 @@ const CombinedCalendar = () => {
             selectedSlot={selectedSlot}
             role={role}
           />
-          <button onClick={handleCloseForm}>Otkaži</button>
+          <button onClick={handleCloseForm}>Cancel</button>
         </div>
       )}
       {role !== "guest" && (
